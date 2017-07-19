@@ -1,6 +1,7 @@
 package com.headlessideas.http
 
-import com.headlessideas.http.model.*
+import com.headlessideas.http.util.html
+import com.headlessideas.http.util.ok
 import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.File
@@ -12,7 +13,7 @@ import java.net.Socket
  * todo: implement coroutines
  */
 
-fun handleClient(client: Socket) {
+suspend fun handleClient(client: Socket) {
     val input = BufferedReader(InputStreamReader(client.getInputStream()))
     val output = DataOutputStream(client.getOutputStream())
 

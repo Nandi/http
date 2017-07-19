@@ -1,4 +1,6 @@
-package com.headlessideas.http.model
+package com.headlessideas.http.util
+
+import com.headlessideas.http.Header
 
 val html = Header("Content-type", "text/html")
 val css = Header("Content-type", "text/css")

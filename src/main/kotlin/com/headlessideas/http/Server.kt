@@ -1,5 +1,7 @@
 package com.headlessideas.http
 
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.launch
 import java.net.ServerSocket
 import java.nio.file.Path
 
@@ -13,7 +15,9 @@ class Server(val documentRoot: Path, val port: Int) {
         while (true) {
             val client = socket.accept()
             println("client connected")
-            handleClient(client)
+            launch(CommonPool) {
+                handleClient(client)
+            }
         }
     }
 }

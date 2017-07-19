@@ -1,4 +1,4 @@
-package com.headlessideas.http.model
+package com.headlessideas.http
 
 import java.io.File
 

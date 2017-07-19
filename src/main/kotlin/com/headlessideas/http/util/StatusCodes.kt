@@ -1,10 +1,6 @@
-package com.headlessideas.http.model
+package com.headlessideas.http.util
 
-data class StatusCode(val code: Int, val message: String) {
-    override fun toString(): String {
-        return "$code $message"
-    }
-}
+import com.headlessideas.http.StatusCode
 
 val notFound = StatusCode(404, "Not Found")
 val ok = StatusCode(200, "OK")

@@ -1,4 +1,4 @@
-package com.headlessideas.http.model
+package com.headlessideas.http
 
 class Request(val method: Method, val path: String, val headers: List<Header>) {
     override fun toString(): String {

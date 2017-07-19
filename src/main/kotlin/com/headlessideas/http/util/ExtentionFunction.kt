@@ -1,4 +1,4 @@
-package com.headlessideas.http
+package com.headlessideas.http.util
 
 import java.io.File
 import java.nio.file.Paths
