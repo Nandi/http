@@ -1,26 +1,26 @@
 package com.headlessideas.http
 
-import com.headlessideas.http.util.html
-import com.headlessideas.http.util.ok
+import com.headlessideas.http.util.*
 import java.io.BufferedReader
 import java.io.DataOutputStream
-import java.io.File
 import java.io.InputStreamReader
 import java.net.Socket
+import java.nio.file.Paths
 
-
-/**
- * todo: implement coroutines
- */
-
-suspend fun handleClient(client: Socket) {
+suspend fun handleClient(client: Socket, documentRoot: String) {
     val input = BufferedReader(InputStreamReader(client.getInputStream()))
     val output = DataOutputStream(client.getOutputStream())
 
+    val response = handleRequest(input, documentRoot)
+    response.writeResponse(output)
+    input.close()
+    output.close()
+    client.close()
+}
+
+private fun handleRequest(input: BufferedReader, documentRoot: String): Response {
     val requestLine = input.readLine()
     val headers = mutableListOf<Header>()
-
-    // read and print out the rest of the request
     var s = input.readLine()
     while (s != null && s.isNotEmpty()) {
         val (name, value) = s.split(": ", limit = 2)
@@ -28,17 +28,38 @@ suspend fun handleClient(client: Socket) {
         s = input.readLine()
     }
 
-    val (method, path) = requestLine.split(" ")
-    val request = Request(Method.valueOf(method), path, headers)
-    println(request)
+    val (method, path, httpVersion) = requestLine.split(" ")
 
-    val response = Response(ok, listOf(html), File("./"))
-    println(response)
+    if (!validHttpVersion(httpVersion)) {
+        return Response(httpVersionNotSupported)
+    }
+    if (!validMethod(method)) {
+        return Response(methodNotAllowed)
+    }
+    if (!validFile(documentRoot, path)) {
+        return Response(notFound)
+    }
 
-    output.writeBytes(response.toString())
-    //output.write(getFile("/").readBytes())
-    output.write("".toByteArray(), 0, 0)
+    val file = Paths.get(documentRoot, path).toFile()
+    val contentType = getContentType(file)
 
-    output.close()
-    client.close()
+
+    if (Method.valueOf(method) == Method.HEAD) {
+        return Response(ok, listOf(contentType), null)
+    } else {
+        return Response(ok, listOf(contentType), file)
+    }
 }
+
+
+private val validVersions = listOf("HTTP/1.0", "HTTP/1.1")
+
+private fun validHttpVersion(httpVersion: String): Boolean = validVersions.contains(httpVersion)
+
+private fun validMethod(method: String): Boolean = Method.values().any { it.name == method }
+
+private fun validFile(documentRoot: String, path: String): Boolean {
+    val file = Paths.get(documentRoot, path).toFile()
+    return file.exists() && file.isFile
+}
+

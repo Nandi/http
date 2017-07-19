@@ -14,9 +14,8 @@ class Server(val documentRoot: Path, val port: Int) {
 
         while (true) {
             val client = socket.accept()
-            println("client connected")
             launch(CommonPool) {
-                handleClient(client)
+                handleClient(client, documentRoot.toFile().canonicalPath)
             }
         }
     }

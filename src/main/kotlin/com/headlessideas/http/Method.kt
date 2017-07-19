@@ -1,5 +1,5 @@
 package com.headlessideas.http
 
 enum class Method {
-    GET, HEAD, POST
+    GET, HEAD
 }
