@@ -11,3 +11,5 @@ val jpeg = Header("Content-type", "image/jpeg")
 val gif = Header("Content-type", "image/gif")
 val js = Header("Content-type", "application/javascript")
 val json = Header("Content-type", "application/json")
+
+fun contentLength(size: Long) = Header("Content-Length", "$size")

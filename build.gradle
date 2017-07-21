@@ -29,4 +29,5 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.16'
+    compile "com.xenomachina:kotlin-argparser:2.0.3"
 }

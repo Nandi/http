@@ -1,8 +1,13 @@
 package com.headlessideas.http.util
 
-import java.io.File
+import com.headlessideas.http.Header
+import java.nio.file.Files
+import java.nio.file.Path
 
-fun getContentType(file: File) = when (file.extension) {
+val Path.contentTypeHeader: Header
+    get() = getContentType(this)
+
+private fun getContentType(path: Path) = when (path.extension) {
     "html", "htm" -> html
     "css" -> css
     "csv" -> csv
@@ -13,3 +18,8 @@ fun getContentType(file: File) = when (file.extension) {
     "json" -> json
     else -> plain
 }
+
+fun Path.exists(): Boolean = Files.exists(this)
+fun Path.readable(): Boolean = Files.isReadable(this)
+val Path.extension: String
+    get() = toFile().extension
