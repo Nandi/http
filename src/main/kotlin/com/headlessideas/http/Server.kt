@@ -3,10 +3,12 @@ package com.headlessideas.http
 import com.headlessideas.http.util.*
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
+import mu.KLogging
 import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.FileInputStream
 import java.io.InputStreamReader
+import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.nio.file.Files
@@ -17,10 +19,12 @@ class Server(val documentRoot: Path, val port: Int) {
 
     val httpVersions = setOf("HTTP/1.0", "HTTP/1.1")
 
+    companion object : KLogging()
+
     fun serve(): Nothing {
 
         val socket = ServerSocket(port)
-        println("Listening on port $port")
+        logger.info("Listening on port $port")
 
         while (true) {
             val client = socket.accept()
@@ -30,7 +34,7 @@ class Server(val documentRoot: Path, val port: Int) {
                         handleClient(client)
                     }
                 } catch (e: Exception) {
-                    println(e)
+                    logger.error { e }
                 }
             }
         }
@@ -41,15 +45,15 @@ class Server(val documentRoot: Path, val port: Int) {
         val output = DataOutputStream(client.getOutputStream())
 
         val request = Request.fromStream(input)
-        request.clientAddress = client.remoteSocketAddress
-        println(request)
+        request.clientAddress = client.remoteSocketAddress as InetSocketAddress
+        logger.debug { request }
         val response = Response()
 
         try {
             handleRequest(request, response)
         } catch (e: Exception) {
             response.statusCode = internalServerError
-            println(e)
+            logger.error { e }
         }
 
         response.send(output)

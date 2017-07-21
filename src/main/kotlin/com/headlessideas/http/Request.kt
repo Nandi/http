@@ -1,15 +1,15 @@
 package com.headlessideas.http
 
 import java.io.BufferedReader
-import java.net.SocketAddress
+import java.net.InetSocketAddress
 
 class Request(val httpVersion: String,
               val method: Method = Method.GET,
               val path: String,
               val headers: List<Header>,
-              var clientAddress: SocketAddress? = null) {
+              var clientAddress: InetSocketAddress? = null) {
     override fun toString(): String {
-        return "[$clientAddress] $httpVersion $method $path"
+        return "${clientAddress?.address} $httpVersion $method $path"
     }
 
     companion object {
