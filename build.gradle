@@ -10,7 +10,6 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-
     }
 }
 
@@ -32,4 +31,16 @@ dependencies {
     compile "com.xenomachina:kotlin-argparser:2.0.3"
     compile "ch.qos.logback:logback-classic:1.0.13"
     compile 'io.github.microutils:kotlin-logging:1.4'
+}
+
+jar {
+    baseName = 'klutch'
+
+    manifest {
+        attributes 'Implementation-Title': 'klutch',
+                'Implementation-Version': version,
+                'Main-Class': 'com.headlessideas.http.example.AppKt'
+    }
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }

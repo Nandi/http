@@ -16,6 +16,7 @@ private fun getContentType(path: Path) = when (path.extension) {
     "gif" -> gif
     "js" -> js
     "json" -> json
+    "svg" -> svg
     else -> plain
 }
 

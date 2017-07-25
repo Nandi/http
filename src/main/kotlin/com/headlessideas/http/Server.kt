@@ -86,7 +86,12 @@ class Server(val documentRoot: Path, val port: Int) {
             return
         }
 
-        response.headers.add(filePath.contentTypeHeader)
+        val contentTypeHeader = filePath.contentTypeHeader
+        if (contentTypeHeader == plain) {
+            logger.debug { "File extension not supported: $filePath" }
+        }
+
+        response.headers.add(contentTypeHeader)
         response.headers.add(contentLength(Files.size(filePath)))
 
         if (request.method == Method.GET) {

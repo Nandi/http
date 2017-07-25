@@ -9,6 +9,7 @@ val plain = Header("Content-type", "text/plain")
 val png = Header("Content-type", "image/png")
 val jpeg = Header("Content-type", "image/jpeg")
 val gif = Header("Content-type", "image/gif")
+val svg = Header("Content-type", "image/svg+xml")
 val js = Header("Content-type", "application/javascript")
 val json = Header("Content-type", "application/json")
 
