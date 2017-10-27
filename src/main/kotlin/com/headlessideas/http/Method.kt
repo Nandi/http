@@ -1,16 +1,15 @@
 package com.headlessideas.http
 
 enum class Method {
-    GET, HEAD, UNKNOWN;
+    GET, HEAD, POST, UNKNOWN;
 
     companion object {
-        fun get(value: String): Method {
-            if (values().any { it.name == value }) {
-                return Method.valueOf(value)
-            } else {
-                return UNKNOWN
-            }
-        }
+        fun get(value: String): Method =
+                if (values().any { it.name == value }) {
+                    Method.valueOf(value)
+                } else {
+                    UNKNOWN
+                }
 
     }
 }

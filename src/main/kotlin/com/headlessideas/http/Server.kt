@@ -15,9 +15,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 
-class Server(val documentRoot: Path, val port: Int) {
+class Server(private val documentRoot: Path, private val port: Int) {
 
-    val httpVersions = setOf("HTTP/1.0", "HTTP/1.1")
+    private val httpVersions = setOf("HTTP/1.0", "HTTP/1.1")
 
     companion object : KLogging()
 
@@ -40,9 +40,8 @@ class Server(val documentRoot: Path, val port: Int) {
         }
     }
 
-    suspend fun handleClient(client: Socket) {
+    private suspend fun handleClient(client: Socket) {
         val input = BufferedReader(InputStreamReader(client.getInputStream()))
-        val output = DataOutputStream(client.getOutputStream())
 
         val request = Request.fromStream(input)
         request.clientAddress = client.remoteSocketAddress as InetSocketAddress
@@ -55,6 +54,8 @@ class Server(val documentRoot: Path, val port: Int) {
             response.statusCode = internalServerError
             logger.error { e }
         }
+
+        val output = DataOutputStream(client.getOutputStream())
 
         response.send(output)
     }
@@ -94,7 +95,7 @@ class Server(val documentRoot: Path, val port: Int) {
         response.headers.add(contentTypeHeader)
         response.headers.add(contentLength(Files.size(filePath)))
 
-        if (request.method == Method.GET) {
+        if (request.method == Method.GET || request.method == Method.POST) {
             response.body = FileInputStream(filePath.toFile())
         }
     }
